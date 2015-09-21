@@ -1,5 +1,36 @@
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render:render });
+
+
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render:render });
+
+var player;
+var platforms;
+var cursors;
+var beets;
+var score = 0;
+var scoreText;
+var enemyText;
+var playerText;
+var endText;
+var startText;
+var sky;
+var cloud;
+var cabinet;
+var bear;
+var bear2;
+var enemy;
+var grounds;
+var bullets;
+var enemyBullets;
+var bulletTime = 0;
+var enemyHit;
+var enemyHealth = 100;
+var playerHealth = 100;
+var firingTimer = 0;
+var blaster;
+var hit;
+var die;
+var enemyFireSound;
 
 function preload() {
     game.load.image('sky', 'assets/sky3.png');
@@ -20,40 +51,12 @@ function preload() {
     game.load.audio('enemyFire', 'audio/shot1.wav');
 }
 
-var player;
-var platforms;
-var cursors;
-var beets;
-var score = 0;
-var scoreText;
-var enemyText;
-var playerText;
-var sky;
-var cloud;
-var cabinet;
-var bear;
-var bear2;
-var enemy;
-var grounds;
-var bullets;
-var enemyBullets;
-var bulletTime = 0;
-var enemyHit;
-var enemyHealth = 100;
-var playerHealth = 100;
-var firingTimer = 0;
-var blaster;
-var hit;
-var die;
-var enemyFireSound;
-
 function create() {
     //  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     blaster = game.add.audio('blaster');
     hit = game.add.audio('enemyHit');
-    die = game.add.audio('enemyDie');
     die = game.add.audio('enemyDie');
     enemyFireSound = game.add.audio('enemyFire');
 
@@ -171,6 +174,12 @@ function create() {
     scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
     enemyText = game.add.text(250, 16, 'Enemy Health: 100%', { fontSize: '32px', fill: '#000' });
     playerText = game.add.text(590, 16, 'Health: 100%', { fontSize: '32px', fill: '#000' });
+    endText = game.add.text(game.world.centerX, game.world.height/4, "", {fontSize: '32px', fill: '#000', align: 'center'});
+    endText.anchor.setTo(0.5, 0.5);
+    startText = game.add.text(game.world.centerX, game.world.height/4, "", {fontSize: '20px', fill: '#000', align: 'center'});
+
+    startText.anchor.setTo(0.5, 0.5);
+
     //  Our controls.
     cursors = game.input.keyboard.createCursorKeys();
     fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -240,6 +249,14 @@ function update() {
     {
         enemyFires();
     }
+
+    function reset () {
+        score = 0;
+        enemyHealth = 100;
+        playerHealth = 100;
+        enemy.alive = true;
+        player.alive = true;
+    }
 }
 
 function collisionHandler (enemy, bullet) {
@@ -247,7 +264,7 @@ function collisionHandler (enemy, bullet) {
     hit.play('', 0, 1, false, false);
     score += 50;
     scoreText.text = 'Score: ' + score;
-    enemyHealth -= 5;
+    enemyHealth -= 50;
     enemyText.text = 'Enemy Health: ' + enemyHealth + '%';
     if (enemyHealth === 0) {
         bonusPoints();
@@ -255,10 +272,10 @@ function collisionHandler (enemy, bullet) {
         bear.kill();
         bear2.kill();
         player.kill();
-        // beets.kill();
         die.play('', 0, 1, false, false);
         enemyBullets.callAll('kill');
         enemy.alive = false;
+        endText.setText("Congratulations!\nYou Saved Schrute's Beet Farm!\nClick to play again");
     }
 
     var explosion = this.add.sprite(enemy.x, enemy.y, 'explosion2');
@@ -317,7 +334,7 @@ function playerHit (player, bullet) {
     bullet.kill();
     score -= 50;
     scoreText.text = 'Score: ' + score;
-    playerHealth -= 10;
+    playerHealth -= 50;
     if (playerHealth < 0) {
         playerHealth = 0;
     }
@@ -333,6 +350,7 @@ function playerHit (player, bullet) {
         bullets.callAll('kill');
         player.alive = false;
         enemy.alive = false;
+        endText.setText("Bummer!\nYou Got 'Beet' Down!\nClick to play again");
     }
 }
 

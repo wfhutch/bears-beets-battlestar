@@ -1,0 +1,15 @@
+.game {
+  float: left;
+  clear: right;
+}
+
+.stats {
+  float: right;
+  clear: left;
+  margin-top: 100px;
+  margin-right: 50px;
+}
+
+.title {
+  margin-bottom: 50px;
+}
