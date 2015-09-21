@@ -11,9 +11,13 @@ function preload() {
     game.load.spritesheet('bear', 'assets/bear.png', 32, 32);
     game.load.image('enemy', 'assets/battlestar.png');
     game.load.image('grounds', 'assets/ground-tile.png');
-    game.load.image('enemy', 'assets/enemy-bullet.png');
+    game.load.image('enemyBullet', 'assets/red_ball.png');
     game.load.spritesheet('explosion1', 'assets/boom32wh12.png', 32, 32);
     game.load.spritesheet('explosion2', 'assets/explosion.png', 64, 64);
+    game.load.audio('blaster', 'audio/blaster.mp3');
+    game.load.audio('enemyHit', 'audio/explode1.wav');
+    game.load.audio('enemyDie', 'audio/explosion.mp3');
+    game.load.audio('enemyFire', 'audio/shot1.wav');
 }
 
 var player;
@@ -38,10 +42,20 @@ var enemyHit;
 var enemyHealth = 100;
 var playerHealth = 100;
 var firingTimer = 0;
+var blaster;
+var hit;
+var die;
+var enemyFireSound;
 
 function create() {
     //  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
+
+    blaster = game.add.audio('blaster');
+    hit = game.add.audio('enemyHit');
+    die = game.add.audio('enemyDie');
+    die = game.add.audio('enemyDie');
+    enemyFireSound = game.add.audio('enemyFire');
 
     sky = game.add.sprite(0, 0, 'sky');
     cloud = game.add.sprite(30, 30, 'cloud');
@@ -63,7 +77,7 @@ function create() {
     enemyBullets = game.add.group();
     enemyBullets.enableBody = true;
     enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
-    enemyBullets.createMultiple(30, 'enemy');
+    enemyBullets.createMultiple(30, 'enemyBullet');
     enemyBullets.setAll('anchor.x', 0.5);
     enemyBullets.setAll('anchor.y', 1);
     enemyBullets.setAll('outOfBoundsKill', true);
@@ -100,7 +114,7 @@ function create() {
     cabinet.enableBody = true;
 
     for (i = 0; i < 4; i++) {
-        var cab = cabinet.create(Math.random() * 700, 510, 'cabinet');
+        var cab = cabinet.create(Math.random() * (700 - 100) + 100, 510, 'cabinet');
         cab.scale.setTo(2);
         cab.anchor.setTo(0.5);
         game.physics.arcade.enable(cab);
@@ -108,7 +122,7 @@ function create() {
         cab.body.setSize(15, 22, 0, -3);
     }
 
-    bear = game.add.sprite(Math.random() * 700, 503, 'bear');
+    bear = game.add.sprite(Math.floor(Math.random() * (400 - 120)) + 120, 503, 'bear');
     bear.anchor.setTo(0.5);
     bear.scale.setTo(4);
     bear.enableBody = true;
@@ -117,7 +131,7 @@ function create() {
     bear.animations.add('move', [0, 0, 0, 0, 0, 1, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 2], 5, true);
     bear.animations.play('move', 4, true);
 
-    bear2 = game.add.sprite(Math.random() * 700, 503, 'bear');
+    bear2 = game.add.sprite(Math.floor(Math.random() * (800 - 400)) + 400, 503, 'bear');
     bear2.anchor.setTo(0.5);
     bear2.scale.setTo(4);
     bear2.enableBody = true;
@@ -160,7 +174,7 @@ function create() {
     //  Our controls.
     cursors = game.input.keyboard.createCursorKeys();
     fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    
+
 }
 
 function update() {
@@ -215,10 +229,11 @@ function update() {
         player.body.velocity.y = -350;
     }
 
-    //  Firing?
+    //  player firing
     if (fireButton.isDown)
     {
         fireBullet();
+
     }
 
     if (game.time.now > firingTimer)
@@ -229,15 +244,21 @@ function update() {
 
 function collisionHandler (enemy, bullet) {
     bullet.kill();
+    hit.play('', 0, 1, false, false);
     score += 50;
     scoreText.text = 'Score: ' + score;
     enemyHealth -= 5;
     enemyText.text = 'Enemy Health: ' + enemyHealth + '%';
     if (enemyHealth === 0) {
+        bonusPoints();
         enemy.kill();
+        bear.kill();
+        bear2.kill();
+        player.kill();
+        // beets.kill();
+        die.play('', 0, 1, false, false);
         enemyBullets.callAll('kill');
         enemy.alive = false;
-        player.alive = false;
     }
 
     var explosion = this.add.sprite(enemy.x, enemy.y, 'explosion2');
@@ -245,6 +266,13 @@ function collisionHandler (enemy, bullet) {
     explosion.animations.add('boom');
     explosion.play('boom', 15, false, true);
 
+}
+
+function bonusPoints () {
+    if (playerHealth >= 50) {
+        score += 1000;
+        scoreText.text = 'Score: ' + score;
+    }
 }
 
 function fireBullet () {
@@ -261,6 +289,7 @@ function fireBullet () {
                 bullet.reset(player.x, player.y + 8);
                 bullet.body.velocity.y = -400;
                 bulletTime = game.time.now + 200;
+                blaster.play('', 0, 1, false, false);
             }
         }
     }
@@ -276,6 +305,7 @@ function enemyFires () {
     var shooter = enemy;
         // And fire the bullet from this enemy
     enemyBullet.reset(enemy.body.x, enemy.body.y);
+    enemyFireSound.play('', 0, 1, false, false);
 
     game.physics.arcade.moveToObject(enemyBullet,player,200);
     firingTimer = game.time.now + 1500;
@@ -288,6 +318,9 @@ function playerHit (player, bullet) {
     score -= 50;
     scoreText.text = 'Score: ' + score;
     playerHealth -= 10;
+    if (playerHealth < 0) {
+        playerHealth = 0;
+    }
     playerText.text = 'Health: ' + playerHealth + '%';
 
     var explosion = this.add.sprite(player.x, player.y, 'explosion1');
@@ -309,7 +342,9 @@ function collectBeet (player, beet) {
     //  Add and update the score
     score += 100;
     scoreText.text = 'Score: ' + score;
-    playerHealth += 2;
+    if (playerHealth <= 95) {
+    playerHealth += 5;
+    }
     playerText.text = 'Health: ' + playerHealth + '%';
 
 }
