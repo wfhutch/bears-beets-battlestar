@@ -4,28 +4,23 @@
   <meta charset="utf-8"/>
   <title>Phaser Game</title>
   <script type="text/javascript" src="www/lib/phaser/build/phaser.min.js"></script>
-  <script type="text/javascript" src="js/phaser.js"></script>
+  <link rel="stylesheet" type="text/css" href="lib/www/lib/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="styles/main.css">
 </head>
-<body>
-  <div class='game'></div>
-  <div class='stats'>
-    <h2>
-      <p class='title'>Bears, Beets, Battlestar Galactica!</p>
-    </h2>
-    <h3>
-      <p class='played'>Played:</p>
-    </h3>    
-    <h3>
-      <p class='won'>Won:</p>
-    </h3>    
-    <h3>
-      <p class='lost'>Lost:</p>
-    </h3>
-    <img class='pic' src='assets/dwight-beets.png'>    
-  </div>
+
+<body ng-app="Game">
+  <div ng-view></div>
 </body>
+
+<script type="text/javascript" src="lib/www/lib/angular/angular.min.js"></script>
+<script type="text/javascript" src="lib/www/lib/angular-route/angular-route.min.js"></script>
+<script type="text/javascript" src="lib/www/lib/angularfire/dist/angularfire.min.js"></script>
+<script type="text/javascript" src="lib/www/lib/firebase/firebase.js"></script>
 <script type="text/javascript" src="lib/www/lib/jquery/dist/jquery.min.js"></script>
-<script type="text/javascript" src="js/main.js"></script>
-<script type="text/javascript" src="js/stats.js"></script>
+<script type="text/javascript" src="lib/www/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="app/app.js"></script>
+<script type="text/javascript" src="app/controllers/auth.js"></script>
+<script type="text/javascript" src="app/factories/uidHandler.js"></script>
+<script type="text/javascript" src="app/phaser.js"></script>
+<script type="text/javascript" src="app/factories/stats.js"></script>
 </html>
