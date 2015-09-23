@@ -9,7 +9,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         //  'active' means all requested fonts have finished loading
         //  We set a 1 second delay before calling 'createText'.
         //  For some reason if we don't the browser cannot render the text the first time it's created.
-        active: function() { game.time.events.add(Phaser.Timer.SECOND, createText, this); },
+        // active: function() { game.time.events.add(Phaser.Timer.SECOND, this); },
 
         //  The Google Fonts we want to load (specify as many as you like in the array)
         google: {
@@ -52,6 +52,9 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
     var enemyFireSound;
     var office;
     var button;
+    var played;
+    var won;
+    var lost;
 
     function preload() {
         game.load.image('sky', 'assets/sky3.png');
@@ -322,10 +325,13 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         explosion.play('boom', 15, false, true);
 
         if (playerHealth <= 0) {
-            player.kill();
-            bullets.callAll('kill');
-            player.alive = false;
-            enemy.alive = false;
+            endGame();
+            gameStats();
+            lost = stats.getgamesLost();
+            var newLost = lost + 1;
+            stats.setgamesLost(newLost);
+            console.log("lost", newLost);
+            $('#lost').html('Lost:' + " " + newLost);
             endText.setText("Bummer!\nYou Got 'Beet' Down!\nClick to play again");
         }
     }
@@ -337,24 +343,16 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         scoreText.text = 'Score: ' + score;
         enemyHealth -= 50;
         enemyText.text = 'Enemy Health: ' + enemyHealth + '%';
-        if (enemyHealth === 0) {
-            
-            finalScore = bonusPoints();
-            console.log("final score", finalScore);
-            
-            var highScore = stats.gethighScore();
-            console.log("high score", highScore);
-            if (finalScore > highScore) {
-                stats.sethighScore(finalScore);
-            }
 
-            enemy.kill();
-            bear.kill();
-            bear2.kill();
-            player.kill();
+        if (enemyHealth === 0) {
             die.play('', 0, 1, false, false);
-            enemyBullets.callAll('kill');
-            enemy.alive = false;
+            endGame();
+            gameStats();
+            won = stats.getgamesWon();
+            var newWon = won + 1;
+            stats.setgamesWon(newWon);
+            console.log("won", newWon);
+            $('#won').html('Won:' + " " + newWon);
             endText.setText("Congratulations!\nYou Saved Schrute's Beet Farm!\nClick to play again");
         }
 
@@ -430,6 +428,39 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         // playerHealth = playerHealth - 10;
         // playerText.text = 'Health: ' + playerHealth + '%';
     }
+
+    function endGame () {
+        player.kill();
+        enemy.kill();
+        bear.kill();
+        bear2.kill();
+        player.alive = false;
+        enemy.alive = false;
+        bullets.callAll('kill');
+        enemyBullets.callAll('kill');
+    }
+
+    function gameStats () {
+        finalScore = bonusPoints();
+        console.log("final score", finalScore);
+        
+        var highScore = stats.gethighScore();
+        console.log("high score", highScore);
+        if (finalScore > highScore) {
+            stats.sethighScore(finalScore);
+            $('#high').html('High Score:' + " " + finalScore);
+        }
+        var newHighScore = stats.gethighScore();
+        console.log("new high score", newHighScore);
+
+        played = stats.getgamesPlayed();
+        var newPlayed = played + 1;
+        stats.setgamesPlayed(newPlayed);
+        console.log("games played", newPlayed);
+
+        $('#played').html('Played:' + " " + newPlayed);
+    }
+
 
     function render() {
         // game.debug.body(enemy);

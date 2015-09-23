@@ -9,7 +9,7 @@ app.controller("authCtrl", ["$scope", "$firebaseAuth", "uidHandle", function($sc
     $scope.createUser = function(user) {
       ref.createUser({
         email    : $scope.user.email,
-        password : $scope.user.password
+        password : $scope.user.password,
       }, function(error, userData) {
         if (error) {
           console.log("Error creating user:", error);
@@ -24,13 +24,15 @@ app.controller("authCtrl", ["$scope", "$firebaseAuth", "uidHandle", function($sc
           'gamesWon': 0,
           'gamesLost': 0,
           'highScore': 0,
+          'username': $scope.user.username,
           'uid': userData.uid
         });
       });
 
       $scope.email = $scope.user.email;
       $scope.password = $scope.user.password;
-      console.log($scope.email, $scope.password);
+      $scope.username = $scope.user.username;
+      console.log($scope.email, $scope.password, $scope.username);
     };
 
     // after user is created they must then login
