@@ -1,7 +1,22 @@
 
-app.controller("gameCtrl", ["$scope", function($scope) {
+app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
 
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
+
+        //  The Google WebFont Loader will look for this object, so create it before loading the script.
+        WebFontConfig = {
+
+        //  'active' means all requested fonts have finished loading
+        //  We set a 1 second delay before calling 'createText'.
+        //  For some reason if we don't the browser cannot render the text the first time it's created.
+        active: function() { game.time.events.add(Phaser.Timer.SECOND, createText, this); },
+
+        //  The Google Fonts we want to load (specify as many as you like in the array)
+        google: {
+          families: ['Revalia', 'Orbitron', 'Bangers']
+        }
+
+    };
     
     game.state.add('level1', {preload: preload, create: create, update: update, render:render});
     game.state.start('level1');
@@ -12,6 +27,7 @@ app.controller("gameCtrl", ["$scope", function($scope) {
     var cursors;
     var beets;
     var score = 0;
+    var finalScore = 0;
     var scoreText;
     var enemyText;
     var playerText;
@@ -35,6 +51,7 @@ app.controller("gameCtrl", ["$scope", function($scope) {
     var die;
     var enemyFireSound;
     var office;
+    var button;
 
     function preload() {
         game.load.image('sky', 'assets/sky3.png');
@@ -54,6 +71,11 @@ app.controller("gameCtrl", ["$scope", function($scope) {
         game.load.spritesheet('bear', 'assets/bear.png', 32, 32);
         game.load.spritesheet('explosion1', 'assets/boom32wh12.png', 32, 32);
         game.load.spritesheet('explosion2', 'assets/explosion.png', 64, 64);
+        game.load.spritesheet('button', 'assets/button_sprite_sheet.png', 193, 71);
+
+        //  Load the Google WebFont Loader script
+        game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1/webfont.js');
+
     }
 
     function create() {
@@ -177,13 +199,21 @@ app.controller("gameCtrl", ["$scope", function($scope) {
         }
 
         //  The score
-        scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
-        enemyText = game.add.text(250, 16, 'Enemy Health: 100%', { fontSize: '32px', fill: '#000' });
-        playerText = game.add.text(590, 16, 'Health: 100%', { fontSize: '32px', fill: '#000' });
+        scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '28px', fill: '#000' });
+        enemyText = game.add.text(game.world.centerX, 35, 'Enemy Health: 100%', { fontSize: '28px', fill: '#000' });
+        enemyText.anchor.setTo(0.5, 0.5);
+        playerText = game.add.text(590, 16, 'Health: 100%', { fontSize: '28px', fill: '#000' });
+
+        scoreText.font = 'Orbitron';
+        enemyText.font = 'Orbitron';
+        playerText.font = 'Orbitron';
+
         endText = game.add.text(game.world.centerX, game.world.height/4, "", {fontSize: '32px', fill: '#000', align: 'center'});
         endText.anchor.setTo(0.5, 0.5);
         startText = game.add.text(game.world.centerX, game.world.height/4, "", {fontSize: '20px', fill: '#000', align: 'center'});
         startText.anchor.setTo(0.5, 0.5);
+
+        button = game.add.button(game.world.centerX - 95, 250, 'button', actionOnClick, this, 2, 2);
 
         //  Our controls.
         cursors = game.input.keyboard.createCursorKeys();
@@ -191,6 +221,12 @@ app.controller("gameCtrl", ["$scope", function($scope) {
     }
 
     function update() {
+
+        button.visible = false;
+
+        if (player.alive === false) {
+            button.visible = true;
+        }
 
         office.play('', 0, 4, false, false);
 
@@ -249,6 +285,7 @@ app.controller("gameCtrl", ["$scope", function($scope) {
         //  player firing
         if (fireButton.isDown)
         {
+            started = true;
             fireBullet();
 
         }
@@ -257,14 +294,16 @@ app.controller("gameCtrl", ["$scope", function($scope) {
         {
             enemyFires();
         }
+    }
 
-        function reset () {
-            score = 0;
-            enemyHealth = 100;
-            playerHealth = 100;
-            enemy.alive = true;
-            player.alive = true;
-        }
+    function actionOnClick () {
+        score = 0;
+        enemyHealth = 100;
+        playerHealth = 100;
+        enemy.alive = true;
+        player.alive = true;
+        started = false;
+        game.state.start('level1');
     }
 
     function playerHit (player, bullet) {
@@ -296,10 +335,19 @@ app.controller("gameCtrl", ["$scope", function($scope) {
         hit.play('', 0, 0.5, false, false);
         score += 50;
         scoreText.text = 'Score: ' + score;
-        enemyHealth -= 5;
+        enemyHealth -= 50;
         enemyText.text = 'Enemy Health: ' + enemyHealth + '%';
         if (enemyHealth === 0) {
-            bonusPoints();
+            
+            finalScore = bonusPoints();
+            console.log("final score", finalScore);
+            
+            var highScore = stats.gethighScore();
+            console.log("high score", highScore);
+            if (finalScore > highScore) {
+                stats.sethighScore(finalScore);
+            }
+
             enemy.kill();
             bear.kill();
             bear2.kill();
@@ -359,6 +407,7 @@ app.controller("gameCtrl", ["$scope", function($scope) {
         if (playerHealth >= 50) {
             score += 1000;
             scoreText.text = 'Score: ' + score;
+            return score;
         }
     }
 

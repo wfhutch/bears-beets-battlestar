@@ -18,8 +18,23 @@ body {
 
 .title {
   margin-bottom: 50px;
+  font-family: 'Gloria Hallelujah';
+  font-size: 1.5em;
+}
+
+.high {
+  margin-bottom: 50px;
 }
 
 .login {
   color: #f7e4f4;
+}
+
+#login-page {
+  text-align: center;
+  margin-top: 100px;
+}
+
+#login-title {
+  margin-bottom: 50px;
 }

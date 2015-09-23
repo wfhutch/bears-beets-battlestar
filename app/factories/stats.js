@@ -2,7 +2,7 @@
 app.factory('stats', function() {
 
   var gamesPlayed = 0;
-  var highScore = 0;
+  var highScore = 123;
   var gamesWon = 0;
   var gamesLost = 0;
 
@@ -31,6 +31,6 @@ app.factory('stats', function() {
     setgamesLost: function(lost) {
       gamesLost = lost;
     }
-  }
-})
+  };
+});
 

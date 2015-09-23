@@ -25,7 +25,7 @@ app.controller("authCtrl", ["$scope", "$firebaseAuth", "uidHandle", function($sc
           'gamesLost': 0,
           'highScore': 0,
           'uid': userData.uid
-        })
+        });
       });
 
       $scope.email = $scope.user.email;
