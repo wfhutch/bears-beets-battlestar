@@ -11,9 +11,13 @@ body {
 .stats {
   float: right;
   clear: left;
-  margin-top: 80px;
+  margin-top: 30px;
   margin-right: 30px;
   color: #f7e4f4;
+}
+
+#greeting {
+  margin-bottom: 20px;
 }
 
 h4 p {
@@ -30,7 +34,7 @@ div p {
 }
 
 #game-name {
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
 
 #statcat {

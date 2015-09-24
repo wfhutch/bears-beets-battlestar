@@ -1,7 +1,7 @@
 
 app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
 
-    var ref = new Firebase("https://bears-beets.firebaseio.com");
+    var ref = new Firebase("https://bears-beets.firebaseio.com/players");
 
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
 
@@ -57,6 +57,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
     var played;
     var won;
     var lost;
+    var highScore;
 
     function preload() {
         game.load.image('sky', 'assets/sky3.png');
@@ -223,6 +224,19 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         //  Our controls.
         cursors = game.input.keyboard.createCursorKeys();
         fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+        var startingPlayed = stats.getgamesPlayed();
+        var startingWon = stats.getgamesWon();
+        var startingLost = stats.getgamesLost();
+        var startingHigh = stats.gethighScore();
+        var user = stats.getuserName();
+
+        $('#lost').html('Lost:' + " " + startingLost);
+        $('#won').html('Won:' + " " + startingWon);
+        $('#played').html('Played:' + " " + startingPlayed);
+        $('#high').html('High Score:' + " " + startingHigh);
+        $('#greeting').html('Hey' + " " + user + ", lets play!");
+
     }
 
     function update() {
@@ -350,7 +364,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
             endGame();
             gameStats();
             won = stats.getgamesWon();
-            var newWon = won + 1;
+            newWon = won + 1;
             stats.setgamesWon(newWon);
             $('#won').html('Won:' + " " + newWon);
             endText.setText("Congratulations!\nYou Saved Schrute's Beet Farm!\nClick to play again");
@@ -432,7 +446,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
 
     function bonusPoints () {
         if (playerHealth >= 50) {
-            score += 1000;
+            score += 2000;
         }  else {
             score = score;
         }
@@ -443,20 +457,21 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
 
     function gameStats () {
         finalScore = bonusPoints();
-        var highScore = stats.gethighScore();
+        highScore = stats.gethighScore();
         if (finalScore > highScore) {
             stats.sethighScore(finalScore);
-            $('#high').html('High Score:' + " " + finalScore);
         }
         played = stats.getgamesPlayed();
-        var newPlayed = played + 1;
+        newPlayed = played + 1;
         stats.setgamesPlayed(newPlayed);
+        var newHighScore = stats.gethighScore();
         $('#played').html('Played:' + " " + newPlayed);
+        $('#high').html('High Score:' + " " + newHighScore);
     }
 
     $scope.logout = function() {
       ref.unauth();
-      window.location = '#/';
+      window.location = '/';
     };
 
 

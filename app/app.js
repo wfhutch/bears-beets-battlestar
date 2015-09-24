@@ -7,22 +7,17 @@ var app = angular.module("myGame", ["ngRoute", "firebase"])
     },
     setUid: function(sentID) {
       uid = sentID;
-      // console.log("factory uid", uid);
     }
   };
-})
-.run(function() {
-   var baseRef = new Firebase("https://bears-beets.firebaseio.com/players");
-
-   var authData = baseRef.getAuth();
-   if (authData) {
-    window.location = '#/game';
-   } else {
-    window.location = '#/';
-   }
 });
+// .run(["uidHandle", function(uidHandle) {
 
+//    var baseRef = new Firebase("https://bears-beets.firebaseio.com/players");
 
+//    var authData = baseRef.getAuth();
+//    uidHandle.setUid(authData.uid);
+//    console.log("authData", authData);
+// }]);
 
 app.factory('stats', 
   ['uidHandle', '$firebaseObject', 
@@ -31,57 +26,69 @@ app.factory('stats',
   var uid = uidHandle.getUid();
 
   var profileRef = new Firebase("https://bears-beets.firebaseio.com/players/" + uid);
-                  // .orderByChild("uid")
-                  // .equalTo(uid);
+
+  var gamesPlayed;
+  var highScore;
+  var gamesWon;
+  var gamesLost;
+  var userName;
 
   var $profile = $firebaseObject(profileRef);
-  console.log("profile", $profile);
+  $profile.$loaded(function() {
 
-  var gamesPlayed = 0; 
-  var highScore = 0;
-  var gamesWon = 0;
-  var gamesLost = 0;
+    gamesPlayed = $profile.gamesPlayed;
+    highScore = $profile.highScore;
+    gamesWon = $profile.gamesWon;
+    gamesLost = $profile.gamesLost;
+    userName = $profile.username;
 
-  return {
-    getgamesPlayed: function() {
-      return gamesPlayed;
-    },
-    setgamesPlayed: function(played) {
-      gamesPlayed = played;
+  });
 
-      $profile.gamesPlayed = played;
-      $profile.$save();
-    },
-    gethighScore: function() {
-      return highScore;
-    },
-    sethighScore: function(high) {
-      highScore = high;
+    return {
+      getgamesPlayed: function() {
+        return gamesPlayed;
+      },
+      setgamesPlayed: function(played) {
+        gamesPlayed = played;
 
-      console.log($profile);
-      $profile.highScore = high;
-      $profile.$save();
-    },
-    getgamesWon: function() {
-      return gamesWon;
-    },
-    setgamesWon: function(won) {
-      gamesWon = won;
-      
-      $profile.gamesWon = won;
-      $profile.$save();
-    },
-    getgamesLost: function() {
-      return gamesLost;
-    },
-    setgamesLost: function(lost) {
-      gamesLost = lost;
+        $profile.gamesPlayed = played;
+        $profile.$save();
+      },
+      gethighScore: function() {
+        return highScore;
+      },
+      sethighScore: function(high) {
+        highScore = high;
 
-      $profile.gamesLost = lost;
-      $profile.$save();
-    }
-  };
+        $profile.highScore = high;
+        $profile.$save();
+      },
+      getgamesWon: function() {
+        return gamesWon;
+      },
+      setgamesWon: function(won) {
+        gamesWon = won;
+        
+        $profile.gamesWon = won;
+        $profile.$save();
+      },
+      getgamesLost: function() {
+        return gamesLost;
+      },
+      setgamesLost: function(lost) {
+        gamesLost = lost;
+
+        $profile.gamesLost = lost;
+        $profile.$save();
+      },
+      getuserName: function() {
+        return userName;
+      }
+    };
+
+  
 }]);
+
 
 app.config(['$routeProvider',
   function($routeProvider) {
@@ -94,5 +101,5 @@ app.config(['$routeProvider',
       }).otherwise({
         redirectTo: '/'
       });
-}]);
+  }]);
 
