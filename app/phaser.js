@@ -1,6 +1,8 @@
 
 app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
 
+    var ref = new Firebase("https://bears-beets.firebaseio.com");
+
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
 
         //  The Google WebFont Loader will look for this object, so create it before loading the script.
@@ -313,7 +315,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         bullet.kill();
         score -= 50;
         scoreText.text = 'Score: ' + score;
-        playerHealth -= 20;
+        playerHealth -= 100;
         if (playerHealth < 0) {
             playerHealth = 0;
         }
@@ -330,7 +332,6 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
             lost = stats.getgamesLost();
             var newLost = lost + 1;
             stats.setgamesLost(newLost);
-            console.log("lost", newLost);
             $('#lost').html('Lost:' + " " + newLost);
             endText.setText("Bummer!\nYou Got 'Beet' Down!\nClick to play again");
         }
@@ -341,7 +342,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         hit.play('', 0, 0.5, false, false);
         score += 50;
         scoreText.text = 'Score: ' + score;
-        enemyHealth -= 50;
+        enemyHealth -= 100;
         enemyText.text = 'Enemy Health: ' + enemyHealth + '%';
 
         if (enemyHealth === 0) {
@@ -351,7 +352,6 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
             won = stats.getgamesWon();
             var newWon = won + 1;
             stats.setgamesWon(newWon);
-            console.log("won", newWon);
             $('#won').html('Won:' + " " + newWon);
             endText.setText("Congratulations!\nYou Saved Schrute's Beet Farm!\nClick to play again");
         }
@@ -401,14 +401,6 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         }
     }
 
-    function bonusPoints () {
-        if (playerHealth >= 50) {
-            score += 1000;
-            scoreText.text = 'Score: ' + score;
-            return score;
-        }
-    }
-
     function collectBeet (player, beet) {
         // Removes the beet from the screen
         beet.kill();
@@ -425,8 +417,6 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
     function hitBear () {
         score -= 1;
         scoreText.text = 'Score: ' + score;
-        // playerHealth = playerHealth - 10;
-        // playerText.text = 'Health: ' + playerHealth + '%';
     }
 
     function endGame () {
@@ -440,26 +430,34 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         enemyBullets.callAll('kill');
     }
 
+    function bonusPoints () {
+        if (playerHealth >= 50) {
+            score += 1000;
+        }  else {
+            score = score;
+        }
+            scoreText.text = 'Score: ' + score;
+            return score;
+        
+    }
+
     function gameStats () {
         finalScore = bonusPoints();
-        console.log("final score", finalScore);
-        
         var highScore = stats.gethighScore();
-        console.log("high score", highScore);
         if (finalScore > highScore) {
             stats.sethighScore(finalScore);
             $('#high').html('High Score:' + " " + finalScore);
         }
-        var newHighScore = stats.gethighScore();
-        console.log("new high score", newHighScore);
-
         played = stats.getgamesPlayed();
         var newPlayed = played + 1;
         stats.setgamesPlayed(newPlayed);
-        console.log("games played", newPlayed);
-
         $('#played').html('Played:' + " " + newPlayed);
     }
+
+    $scope.logout = function() {
+      ref.unauth();
+      window.location = '#/';
+    };
 
 
     function render() {

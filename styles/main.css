@@ -11,7 +11,7 @@ body {
 .stats {
   float: right;
   clear: left;
-  margin-top: 50px;
+  margin-top: 80px;
   margin-right: 30px;
   color: #f7e4f4;
 }
@@ -52,6 +52,15 @@ div p {
 
 #login-title {
   font-family: 'Gloria Hallelujah';
+  font-size: 4em;
+}
+
+#logout-btn {
+  font-weight: 800;
+  color: black;
+  margin-top: 30px;
+  background-color: #f7e4f4;
+  border-radius: 5px;
 }
 
 .pic {

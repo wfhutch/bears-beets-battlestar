@@ -1,7 +1,7 @@
 
 app.controller("authCtrl", ["$scope", "$firebaseAuth", "uidHandle", function($scope, $firebaseAuth, uidHandle) {
 
-    var ref = new Firebase("https://bears-beets.firebaseio.com");
+    var ref = new Firebase("https://bears-beets.firebaseio.com/players");
 
     // create an instance of the authentication service
     var auth = $firebaseAuth(ref);
@@ -28,11 +28,6 @@ app.controller("authCtrl", ["$scope", "$firebaseAuth", "uidHandle", function($sc
           'uid': userData.uid
         });
       });
-
-      $scope.email = $scope.user.email;
-      $scope.password = $scope.user.password;
-      $scope.username = $scope.user.username;
-      console.log($scope.email, $scope.password, $scope.username);
     };
 
     // after user is created they must then login
@@ -50,13 +45,7 @@ app.controller("authCtrl", ["$scope", "$firebaseAuth", "uidHandle", function($sc
           window.location = '#/game';
         }
       });
-
-      $scope.loginEmail = $scope.user.loginEmail;
-      $scope.loginPassword = $scope.user.loginPassword;
-      console.log($scope.loginEmail, $scope.loginPassword);
-      
     };
-
   }]);
 
 
