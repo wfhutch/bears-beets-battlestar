@@ -52,7 +52,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
     var hit;
     var die;
     var enemyFireSound;
-    var office;
+    var music;
     var button;
     var played;
     var won;
@@ -92,7 +92,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         hit = game.add.audio('enemyHit');
         die = game.add.audio('enemyDie');
         enemyFireSound = game.add.audio('enemyFire');
-        office = game.add.audio('office');
+        music = game.add.audio('office');
 
         sky = game.add.sprite(0, 0, 'sky');
         cloud = game.add.sprite(30, 30, 'cloud');
@@ -214,12 +214,19 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         enemyText.font = 'Orbitron';
         playerText.font = 'Orbitron';
 
-        endText = game.add.text(game.world.centerX, game.world.height/4, "", {fontSize: '32px', fill: '#000', align: 'center'});
+        endText = game.add.text(game.world.centerX, game.world.height/4, "", {fontSize: '32px Revalia', fill: '#000', align: 'center'});
         endText.anchor.setTo(0.5, 0.5);
-        startText = game.add.text(game.world.centerX, game.world.height/4, "", {fontSize: '20px', fill: '#000', align: 'center'});
+        startText = game.add.text(game.world.centerX, game.world.height/4, "", {fontSize: '20px Revalia', fill: '#000', align: 'center'});
         startText.anchor.setTo(0.5, 0.5);
 
-        button = game.add.button(game.world.centerX - 95, 250, 'button', actionOnClick, this, 2, 2);
+        textButton = game.add.text(game.world.centerX - 0, 250, 'Click Here To Play Again!', {fontSize: '38px Revalia', fill: '#8a0662'});
+        textButton.anchor.setTo(0.5);
+        textButton.inputEnabled = true;
+        textButton.input.useHandCursor = true;
+        textButton.setShadow(2, 2, 'rgba(0,0,0,0.5)', 1);
+        textButton.events.onInputDown.add(function () {
+            restartGame();
+        }, this, 2);
 
         //  Our controls.
         cursors = game.input.keyboard.createCursorKeys();
@@ -241,13 +248,13 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
 
     function update() {
 
-        button.visible = false;
+        textButton.visible = false;
 
         if (player.alive === false) {
-            button.visible = true;
+            textButton.visible = true;
         }
 
-        office.play('', 0, 4, false, false);
+        music.play('', 0, 2, false, false);
 
         // Move enemy back and forth
         if (enemy.body.position.x < 70) {
@@ -315,7 +322,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         }
     }
 
-    function actionOnClick () {
+    function restartGame () {
         score = 0;
         enemyHealth = 100;
         playerHealth = 100;
@@ -323,6 +330,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         player.alive = true;
         started = false;
         game.state.start('level1');
+        music.stop();
     }
 
     function playerHit (player, bullet) {
@@ -347,7 +355,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
             var newLost = lost + 1;
             stats.setgamesLost(newLost);
             $('#lost').html('Lost:' + " " + newLost);
-            endText.setText("Bummer!\nYou Got 'Beet' Down!\nClick to play again");
+            endText.setText("Bummer!\nYou Got 'Beet' Down!");
         }
     }
 
@@ -367,7 +375,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
             newWon = won + 1;
             stats.setgamesWon(newWon);
             $('#won').html('Won:' + " " + newWon);
-            endText.setText("Congratulations!\nYou Saved Schrute's Beet Farm!\nClick to play again");
+            endText.setText("Congratulations!\nYou Saved Schrute's Beet Farm!");
         }
 
         // explosion animation
