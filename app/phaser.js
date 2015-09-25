@@ -36,10 +36,11 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
     var endText;
     var startText;
     var sky;
-    var cloud;
+    var clouds;
     var cabinet;
-    var bear;
-    var bear2;
+    var bears;
+    var bears2;
+    var bear3;
     var enemy;
     var grounds;
     var bullets;
@@ -58,15 +59,17 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
     var won;
     var lost;
     var highScore;
+    var grass;
 
     function preload() {
         game.load.image('sky', 'assets/sky3.png');
         game.load.image('cloud', 'assets/cloud.png');
         game.load.image('ground', 'assets/platform.png');
+        game.load.image('dirt', 'assets/ground-tile.png');
+        game.load.image('grass', 'assets/light_grass.png');
         game.load.image('beet', 'assets/beet.png');
         game.load.image('cabinet', 'assets/file-cabinet.png');
         game.load.image('enemy', 'assets/battlestar.png');
-        game.load.image('grounds', 'assets/ground-tile.png');
         game.load.image('enemyBullet', 'assets/red_ball.png');
         game.load.audio('blaster', 'audio/blaster.mp3');
         game.load.audio('enemyHit', 'audio/explode1.wav');
@@ -88,18 +91,23 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         //  We're going to be using physics, so enable the Arcade Physics system
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
+        game.world.setBounds(0, 0, 2400, 600);
+
+
+
         blaster = game.add.audio('blaster');
         hit = game.add.audio('enemyHit');
         die = game.add.audio('enemyDie');
         enemyFireSound = game.add.audio('enemyFire');
         music = game.add.audio('office');
 
-        sky = game.add.sprite(0, 0, 'sky');
-        cloud = game.add.sprite(30, 30, 'cloud');
-        cloud = game.add.sprite(100, 50, 'cloud');
-        cloud = game.add.sprite(210, 20, 'cloud');
-        cloud = game.add.sprite(500, 90, 'cloud');
-        cloud = game.add.sprite(550, 60, 'cloud');
+        sky = game.add.tileSprite(0, 0, 2400, 600, 'sky');
+
+        clouds = game.add.group();
+        for (i=0; i<20; i++) {
+            var cloud = clouds.create(Math.random() * (2300 - 30) + 30,
+            Math.random() * (130 - 30) + 30, 'cloud');
+        }
 
         // The player's bullets
         bullets = game.add.group();
@@ -128,28 +136,28 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         enemy.anchor.setTo(0.5, 0.5);
         enemy.body.setSize(20, 10, 0, 20);
 
-        //  The platforms group contains the ground
-        platforms = game.add.group();
-        //  We will enable physics for any object that is created in this group
-        platforms.enableBody = true;
-        // Here we create the ground.
-        var ground = platforms.create(0, game.world.height - 64, 'ground');
-        //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-        ground.scale.setTo(2, 2);
-        //  This stops it from falling away when you jump on it
-        ground.body.immovable = true;
+
+        grass = game.add.tileSprite(0, 530, 8200, 530, 'grass');
+        grass.scale.setTo(0.3);
+        grass.enableBody = true;
+        game.physics.arcade.enable(grass);
+        grass.body.immovable = true;
+
         //  Adds row at bottom of screen that looks like dirt
-        grounds = game.add.tileSprite(0, 570, 800, 50, 'grounds');
+        grounds = game.add.tileSprite(0, 570, 2400, 50, 'dirt');
+        grounds.enableBody = true;
 
         //  Small cabinets for depth randomly placed
-        game.add.sprite(Math.random() * 700, 505, 'cabinet');
-        game.add.sprite(Math.random() * 700, 505, 'cabinet');
+        game.add.sprite(Math.random() * 2200, 505, 'cabinet');
+        game.add.sprite(Math.random() * 2200, 505, 'cabinet');
+        game.add.sprite(Math.random() * 2200, 505, 'cabinet');
+        game.add.sprite(Math.random() * 2200, 505, 'cabinet');
 
-        //  Large cabinets randomly placed
+        // Large cabinets randomly placed
         cabinet = game.add.group();
         cabinet.enableBody = true;
-        for (i = 0; i < 4; i++) {
-            var cab = cabinet.create(Math.random() * (700 - 100) + 100, 510, 'cabinet');
+        for (i = 0; i < 12; i++) {
+            var cab = cabinet.create(Math.random() * (2400 - 100) + 100, 510, 'cabinet');
             cab.scale.setTo(2);
             cab.anchor.setTo(0.5);
             game.physics.arcade.enable(cab);
@@ -157,26 +165,51 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
             cab.body.setSize(15, 22, 0, -3);
         }
 
-        bear = game.add.sprite(Math.floor(Math.random() * (400 - 120)) + 120, 503, 'bear');
-        bear.anchor.setTo(0.5);
-        bear.scale.setTo(4);
-        bear.enableBody = true;
-        game.physics.arcade.enable(bear);
-        bear.body.setSize(23, 15, -15, 0);
-        bear.animations.add('move', [0, 0, 0, 0, 0, 1, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 2], 5, true);
-        bear.animations.play('move', 4, true);
+        bears = game.add.group();
+        bears.enableBody = true;
+        for (i = 0; i < 2; i++) {
+            var bear = bears.create(Math.random() * (2300 - 150) + 150, 510, 'bear');
+            bear.scale.setTo(4);
+            bear.anchor.setTo(0.5);
+            game.physics.arcade.enable(bear);
+            bear.body.setSize(23, 15, -15, 0);
+            bear.animations.add('move', 
+                [0, 0, 0, 0, 0, 1, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 2], 5, true);
+            bear.animations.play('move', 4, true);
+        }        
 
-        bear2 = game.add.sprite(Math.floor(Math.random() * (800 - 400)) + 400, 503, 'bear');
-        bear2.anchor.setTo(0.5);
-        bear2.scale.setTo(4);
-        bear2.enableBody = true;
-        game.physics.arcade.enable(bear2);
-        bear2.body.setSize(23, 15, -15, 0);
-        bear2.animations.add('move', [0, 0, 0, 1, 1, 2, 3, 3, 3, 2], 3, true);
-        bear2.animations.play('move', 4, true);
+        bears2 = game.add.group();
+        bears2.enableBody = true;
+        for (i = 0; i < 3; i++) {
+            var bear2 = bears2.create(Math.random() * (2300 - 150) + 150, 510, 'bear');
+            bear2.scale.setTo(4);
+            bear2.anchor.setTo(0.5);
+            game.physics.arcade.enable(bear2);
+            bear2.body.setSize(23, 15, -15, 0);
+            bear2.animations.add('move', [0, 0, 0, 1, 1, 2, 3, 3, 3, 2], 3, true);
+            bear2.animations.play('move', 4, true);
+        }
+
+        bear3 = game.add.sprite(775, 510, 'bear');
+        bear3.frame = 0;
+        bear3.anchor.setTo(0.5);
+        bear3.enableBody = true;
+        game.physics.arcade.enable(bear3);
+        bear3.body.immovable = true;
+        bear3.body.setSize(20, 10, 10, 10);
+        bear3.scale.setTo(-6, 6);        
+
+        bear3 = game.add.sprite(1700, 510, 'bear');
+        bear3.frame = 0;
+        bear3.anchor.setTo(0.5);
+        bear3.enableBody = true;
+        game.physics.arcade.enable(bear3);
+        bear3.body.immovable = true;
+        bear3.body.setSize(20, 10, 10, 10);
+        bear3.scale.setTo(-6, 6);
 
         // The player and its settings
-        player = game.add.sprite(32, game.world.height - 150, 'dude');
+        player = game.add.sprite(32, 250, 'dude');
         player.anchor.setTo(0.5);
         player.scale.setTo(1.5);
         //  We need to enable physics on the player
@@ -188,16 +221,17 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         //  Our two animations, walking left and right.
         player.animations.add('left', [0, 1, 2, 3], 10, true);
         player.animations.add('right', [5, 6, 7, 8], 10, true);
+        game.camera.follow(player);
 
         //  Finally some beets to collect
         beets = game.add.group();
         //  We will enable physics for any beet that is created in this group
         beets.enableBody = true;
         //  Here we'll create 12 of them evenly spaced apart
-        for (var i = 0; i < 12; i++)
+        for (var i = 0; i < 20; i++)
         {
             //  Create a beet inside of the 'beets' group
-            var beet = beets.create(i * 70, 400, 'beet');
+            var beet = beets.create((i * 120) + 80, 400, 'beet');
             //  Let gravity do its thing
             beet.body.gravity.y = 300;
             //  This just gives each beet a slightly random bounce value
@@ -206,7 +240,8 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
 
         //  The score
         scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '28px', fill: '#000' });
-        enemyText = game.add.text(game.world.centerX, 35, 'Enemy Health: 100%', { fontSize: '28px', fill: '#000' });
+        enemyText = game.add.text(game.world.centerX, 35, 'Enemy Health: 100%', 
+            { fontSize: '28px', fill: '#000' });
         enemyText.anchor.setTo(0.5, 0.5);
         playerText = game.add.text(590, 16, 'Health: 100%', { fontSize: '28px', fill: '#000' });
 
@@ -214,12 +249,15 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         enemyText.font = 'Orbitron';
         playerText.font = 'Orbitron';
 
-        endText = game.add.text(game.world.centerX, game.world.height/4, "", {fontSize: '32px Revalia', fill: '#000', align: 'center'});
+        endText = game.add.text(game.world.centerX, game.world.height/4, "", 
+            {fontSize: '32px Revalia', fill: '#000', align: 'center'});
         endText.anchor.setTo(0.5, 0.5);
-        startText = game.add.text(game.world.centerX, game.world.height/4, "", {fontSize: '20px Revalia', fill: '#000', align: 'center'});
+        startText = game.add.text(game.world.centerX, game.world.height/4, "", 
+            {fontSize: '20px Revalia', fill: '#000', align: 'center'});
         startText.anchor.setTo(0.5, 0.5);
 
-        textButton = game.add.text(game.world.centerX - 0, 250, 'Click Here To Play Again!', {fontSize: '38px Revalia', fill: '#8a0662'});
+        textButton = game.add.text(game.world.centerX - 0, 250, 'Click Here To Play Again!', 
+            {fontSize: '38px Revalia', fill: '#8a0662'});
         textButton.anchor.setTo(0.5);
         textButton.inputEnabled = true;
         textButton.input.useHandCursor = true;
@@ -257,23 +295,24 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         music.play('', 0, 2, false, false);
 
         // Move enemy back and forth
-        if (enemy.body.position.x < 70) {
-            game.add.tween(enemy).to({x: 561}, 5000, Phaser.Easing.Out, true);
+        if (enemy.body.position.x < 100) {
+            game.add.tween(enemy).to({x: 2300}, 15000, Phaser.Easing.Out, true);
         }
         
-        if (enemy.body.position.x > 520) {
-            game.add.tween(enemy).to({x: 69}, 5000, Phaser.Easing.Out, true);
+        if (enemy.body.position.x > 2250) {
+            game.add.tween(enemy).to({x: 60}, 15000, Phaser.Easing.Out, true);
         }
 
         //  Collide the player and the beets with the platforms and cabinets
-        game.physics.arcade.collide(player, platforms);
+        game.physics.arcade.collide(player, grass);
         game.physics.arcade.collide(player, cabinet);
-        game.physics.arcade.collide(beets, platforms);
+        game.physics.arcade.collide(player, bear3, hitBear3);
+        game.physics.arcade.collide(beets, grass);
         game.physics.arcade.collide(beets, cabinet);
         //  Checks to see if the player overlaps with any of the beets or bears
         game.physics.arcade.overlap(player, beets, collectBeet, null, this);
-        game.physics.arcade.overlap(player, bear, hitBear, null, this);
-        game.physics.arcade.overlap(player, bear2, hitBear, null, this);
+        game.physics.arcade.overlap(player, bears, hitBear, null, this);
+        game.physics.arcade.overlap(player, bears2, hitBear, null, this);
 
         game.physics.arcade.overlap(bullets, enemy, enemyHit, null, this);
         game.physics.arcade.overlap(enemyBullets, player, playerHit, null, this);
@@ -337,7 +376,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         bullet.kill();
         score -= 50;
         scoreText.text = 'Score: ' + score;
-        playerHealth -= 100;
+        playerHealth -= 20;
         if (playerHealth < 0) {
             playerHealth = 0;
         }
@@ -364,7 +403,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         hit.play('', 0, 0.5, false, false);
         score += 50;
         scoreText.text = 'Score: ' + score;
-        enemyHealth -= 100;
+        enemyHealth -= 5;
         enemyText.text = 'Enemy Health: ' + enemyHealth + '%';
 
         if (enemyHealth === 0) {
@@ -441,11 +480,17 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         scoreText.text = 'Score: ' + score;
     }
 
+    function hitBear3 () {
+        score -=10;
+        scoreText.text = 'Score: ' + score;
+    }
+
     function endGame () {
         player.kill();
         enemy.kill();
-        bear.kill();
-        bear2.kill();
+        bears.callAll('kill');
+        bears2.callAll('kill');
+        bear3.kill();
         player.alive = false;
         enemy.alive = false;
         bullets.callAll('kill');
@@ -484,7 +529,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
 
 
     function render() {
-        // game.debug.body(enemy);
+        // game.debug.body(bear3);
         // cabinet.forEach(function(cab) {
         //     game.debug.body(cab);
         // })
