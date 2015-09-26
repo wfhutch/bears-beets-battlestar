@@ -10,10 +10,10 @@ app.controller("authCtrl", ["$scope", "$firebaseAuth", "uidHandle", function($sc
     // create an instance of the authentication service
     var auth = $firebaseAuth(ref);
 
-    $scope.createUser = function(user) {
+    $scope.createUser = function() {
       ref.createUser({
-        email    : $scope.user.email,
-        password : $scope.user.password,
+        email    : $scope.email,
+        password : $scope.password,
       }, function(error, userData) {
         if (error) {
           
@@ -24,7 +24,7 @@ app.controller("authCtrl", ["$scope", "$firebaseAuth", "uidHandle", function($sc
               break;
             case "INVALID_EMAIL":
               console.log("The specified email is not a valid email.");
-              alert("Invalid email address, please try again"); 
+              alert("Invalid email address. Please try again"); 
               break;
             default:
               console.log("Error creating user:", error);
@@ -33,16 +33,16 @@ app.controller("authCtrl", ["$scope", "$firebaseAuth", "uidHandle", function($sc
         } 
         else {
           console.log("Successfully created user account with uid:", userData.uid);
-          alert("User successfully created, please log in");
+          alert("User successfully created. Please log in to continue.");
         }
 
         $scope.usernameLength = $scope.user.username.length;
         console.log("username length", $scope.usernameLength);
         if ($scope.usernameLength > $scope.letterLimit) {
-          $scope.userName = $scope.user.username.slice(0, 20);
+          $scope.userName = $scope.user.username.slice(0, 18);
         } else {
           $scope.userName = $scope.user.username;
-        }
+          }
 
         var player = ref.child(userData.uid);
         player.set(
@@ -58,10 +58,10 @@ app.controller("authCtrl", ["$scope", "$firebaseAuth", "uidHandle", function($sc
     };
 
     // after user is created they must then login
-    $scope.loginUser = function(user) {
+    $scope.loginUser = function() {
       ref.authWithPassword({
-        email    : $scope.user.loginEmail,
-        password : $scope.user.loginPassword
+        email    : $scope.loginEmail,
+        password : $scope.loginPassword
       }, function(error, authData) {
         if (error) {
           console.log("Login Failed!", error);

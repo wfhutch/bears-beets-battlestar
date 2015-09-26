@@ -376,7 +376,11 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         game.physics.arcade.collide(beets, grass);
         game.physics.arcade.collide(beets, cabinet);
         game.physics.arcade.collide(beets, fixedCab3);
-        game.physics.arcade.collide(enemyBullets, fixedCab5);
+        game.physics.arcade.collide(enemyBullets, fixedCab, killBullet);
+        game.physics.arcade.collide(enemyBullets, fixedCab2, killBullet);
+        game.physics.arcade.collide(enemyBullets, fixedCab3, killBullet);
+        game.physics.arcade.collide(enemyBullets, fixedCab4, killBullet);
+        game.physics.arcade.collide(enemyBullets, fixedCab5, killBullet);
 
         //  Checks to see if the player overlaps with any of the beets or bears
         game.physics.arcade.overlap(player, beets, collectBeet, null, this);
@@ -529,6 +533,10 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         firingTimer = game.time.now + 1500;
 
         }
+    }
+
+    function killBullet(cab, bullet) {
+        bullet.kill();
     }
 
     function collectBeet (player, beet) {
