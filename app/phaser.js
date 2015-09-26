@@ -60,6 +60,8 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
     var lost;
     var highScore;
     var grass;
+    var fixedCab;
+    var fixedCab2;
 
     function preload() {
         game.load.image('sky', 'assets/sky3.png');
@@ -69,6 +71,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         game.load.image('grass', 'assets/light_grass.png');
         game.load.image('beet', 'assets/beet.png');
         game.load.image('cabinet', 'assets/file-cabinet.png');
+        game.load.image('cabinet2', 'assets/file-cabinet-clone.png');
         game.load.image('enemy', 'assets/battlestar.png');
         game.load.image('enemyBullet', 'assets/red_ball.png');
         game.load.audio('blaster', 'audio/blaster.mp3');
@@ -129,7 +132,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         enemyBullets.setAll('outOfBoundsKill', true);
         enemyBullets.setAll('checkWorldBounds', true);
 
-        enemy = game.add.sprite(100, 90, 'enemy');
+        enemy = game.add.sprite(1500, 90, 'enemy');
         enemy.scale.setTo(4);
         enemy.enableBody = true;
         game.physics.arcade.enable(enemy);
@@ -147,7 +150,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         grounds = game.add.tileSprite(0, 570, 2400, 50, 'dirt');
         grounds.enableBody = true;
 
-        //  Small cabinets for depth randomly placed
+        // Small cabinets for depth randomly placed
         game.add.sprite(Math.random() * 2200, 505, 'cabinet');
         game.add.sprite(Math.random() * 2200, 505, 'cabinet');
         game.add.sprite(Math.random() * 2200, 505, 'cabinet');
@@ -164,6 +167,47 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
             cab.body.immovable = true;
             cab.body.setSize(15, 22, 0, -3);
         }
+
+        fixedCab = game.add.sprite(1200, 503, 'cabinet');
+        fixedCab.scale.setTo(2);
+        fixedCab.anchor.setTo(0.5);
+        fixedCab.enableBody = true;
+        game.physics.arcade.enable(fixedCab);
+        fixedCab.body.immovable = true;
+        fixedCab.body.setSize(15, 22, 0, -3);        
+
+        fixedCab2 = game.add.sprite(1250, 503, 'cabinet');
+        fixedCab2.scale.setTo(2);
+        fixedCab2.anchor.setTo(0.5);
+        fixedCab2.enableBody = true;
+        game.physics.arcade.enable(fixedCab2);
+        fixedCab2.body.immovable = true;
+        fixedCab2.body.setSize(15, 22, 0, -3);
+
+        fixedCab3 = game.add.sprite(1300, 503, 'cabinet');
+        fixedCab3.scale.setTo(2);
+        fixedCab3.anchor.setTo(0.5);
+        fixedCab3.enableBody = true;
+        game.physics.arcade.enable(fixedCab3);
+        fixedCab3.body.immovable = true;
+        fixedCab3.body.setSize(15, 22, 0, -3);
+
+        fixedCab4 = game.add.sprite(1250, 445, 'cabinet2');
+        fixedCab4.scale.setTo(2);
+        fixedCab4.anchor.setTo(0.5);
+        fixedCab4.enableBody = true;
+        game.physics.arcade.enable(fixedCab4);
+        fixedCab4.body.immovable = true;
+        fixedCab4.body.setSize(15, 22, 0, -3);        
+
+        fixedCab5 = game.add.sprite(1250, 387, 'cabinet2');
+        fixedCab5.scale.setTo(2);
+        fixedCab5.anchor.setTo(0.5);
+        fixedCab5.enableBody = true;
+        game.physics.arcade.enable(fixedCab5);
+        fixedCab5.body.immovable = true;
+        fixedCab5.body.setSize(15, 22, 0, -3);
+
 
         bears = game.add.group();
         bears.enableBody = true;
@@ -199,17 +243,17 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         bear3.body.setSize(20, 10, 10, 10);
         bear3.scale.setTo(-6, 6);        
 
-        bear3 = game.add.sprite(1700, 510, 'bear');
-        bear3.frame = 0;
-        bear3.anchor.setTo(0.5);
-        bear3.enableBody = true;
-        game.physics.arcade.enable(bear3);
-        bear3.body.immovable = true;
-        bear3.body.setSize(20, 10, 10, 10);
-        bear3.scale.setTo(-6, 6);
+        bear4 = game.add.sprite(1700, 510, 'bear');
+        bear4.frame = 0;
+        bear4.anchor.setTo(0.5);
+        bear4.enableBody = true;
+        game.physics.arcade.enable(bear4);
+        bear4.body.immovable = true;
+        bear4.body.setSize(20, 10, 10, 10);
+        bear4.scale.setTo(-6, 6);
 
         // The player and its settings
-        player = game.add.sprite(32, 250, 'dude');
+        player = game.add.sprite(32, 450, 'dude');
         player.anchor.setTo(0.5);
         player.scale.setTo(1.5);
         //  We need to enable physics on the player
@@ -221,6 +265,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         //  Our two animations, walking left and right.
         player.animations.add('left', [0, 1, 2, 3], 10, true);
         player.animations.add('right', [5, 6, 7, 8], 10, true);
+        player.body.setSize(18, 35, 0, 10);
         game.camera.follow(player);
 
         //  Finally some beets to collect
@@ -240,25 +285,40 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
 
         //  The score
         scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '28px', fill: '#000' });
-        enemyText = game.add.text(game.world.centerX, 35, 'Enemy Health: 100%', 
+        scoreText.fixedToCamera = true;
+        scoreText.cameraOffset.setTo(16, 16);
+
+        enemyText = game.add.text(400, 35, 'Enemy Health: 100%', 
             { fontSize: '28px', fill: '#000' });
         enemyText.anchor.setTo(0.5, 0.5);
+        enemyText.fixedToCamera = true;
+        enemyText.cameraOffset.setTo(400, 35);
+
         playerText = game.add.text(590, 16, 'Health: 100%', { fontSize: '28px', fill: '#000' });
+        playerText.fixedToCamera = true;
+        playerText.cameraOffset.setTo(590, 16);
 
-        scoreText.font = 'Orbitron';
-        enemyText.font = 'Orbitron';
-        playerText.font = 'Orbitron';
+        scoreText.font = 'Garamond';
+        enemyText.font = 'Garamond';
+        playerText.font = 'Garamond';
 
-        endText = game.add.text(game.world.centerX, game.world.height/4, "", 
+        endText = game.add.text(400, game.world.height/4, "", 
             {fontSize: '32px Revalia', fill: '#000', align: 'center'});
         endText.anchor.setTo(0.5, 0.5);
-        startText = game.add.text(game.world.centerX, game.world.height/4, "", 
+        endText.fixedToCamera = true;
+        endText.cameraOffset.setTo(400, game.world.height/4);
+
+        startText = game.add.text(400, game.world.height/4, "", 
             {fontSize: '20px Revalia', fill: '#000', align: 'center'});
         startText.anchor.setTo(0.5, 0.5);
+        startText.fixedToCamera = true;
+        startText.cameraOffset.setTo(400, game.world.height/4);
 
-        textButton = game.add.text(game.world.centerX - 0, 250, 'Click Here To Play Again!', 
+        textButton = game.add.text(400, 250, 'Click Here To Play Again!', 
             {fontSize: '38px Revalia', fill: '#8a0662'});
         textButton.anchor.setTo(0.5);
+        textButton.fixedToCamera = true;
+        textButton.cameraOffset.setTo(400, 250);
         textButton.inputEnabled = true;
         textButton.input.useHandCursor = true;
         textButton.setShadow(2, 2, 'rgba(0,0,0,0.5)', 1);
@@ -295,20 +355,29 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         music.play('', 0, 2, false, false);
 
         // Move enemy back and forth
-        if (enemy.body.position.x < 100) {
-            game.add.tween(enemy).to({x: 2300}, 15000, Phaser.Easing.Out, true);
+        if (enemy.body.position.x < 1700) {
+            game.add.tween(enemy).to({x: 2300}, 5000, Phaser.Easing.Out, true);
         }
         
         if (enemy.body.position.x > 2250) {
-            game.add.tween(enemy).to({x: 60}, 15000, Phaser.Easing.Out, true);
+            game.add.tween(enemy).to({x: 1650}, 5000, Phaser.Easing.Out, true);
         }
 
         //  Collide the player and the beets with the platforms and cabinets
         game.physics.arcade.collide(player, grass);
         game.physics.arcade.collide(player, cabinet);
-        game.physics.arcade.collide(player, bear3, hitBear3);
+        game.physics.arcade.collide(player, fixedCab);
+        game.physics.arcade.collide(player, fixedCab2);
+        game.physics.arcade.collide(player, fixedCab3);
+        game.physics.arcade.collide(player, fixedCab4);
+        game.physics.arcade.collide(player, fixedCab5);
+        game.physics.arcade.collide(player, bear3, hitBigBear);
+        game.physics.arcade.collide(player, bear4, hitBigBear);
         game.physics.arcade.collide(beets, grass);
         game.physics.arcade.collide(beets, cabinet);
+        game.physics.arcade.collide(beets, fixedCab3);
+        game.physics.arcade.collide(enemyBullets, fixedCab5);
+
         //  Checks to see if the player overlaps with any of the beets or bears
         game.physics.arcade.overlap(player, beets, collectBeet, null, this);
         game.physics.arcade.overlap(player, bears, hitBear, null, this);
@@ -354,7 +423,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
             fireBullet();
 
         }
-
+        // adding && prevents enemy from firing until game starts
         if (game.time.now > firingTimer && started)
         {
             enemyFires();
@@ -480,9 +549,11 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         scoreText.text = 'Score: ' + score;
     }
 
-    function hitBear3 () {
-        score -=10;
+    function hitBigBear () {
+        score -= 10;
         scoreText.text = 'Score: ' + score;
+        playerHealth -= 1;
+        playerText.text = 'Health: ' + playerHealth + '%';
     }
 
     function endGame () {
@@ -529,7 +600,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
 
 
     function render() {
-        // game.debug.body(bear3);
+        // game.debug.body(fixedCab);
         // cabinet.forEach(function(cab) {
         //     game.debug.body(cab);
         // })
