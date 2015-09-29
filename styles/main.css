@@ -74,3 +74,16 @@ div p {
 .pic {
   margin-top: 50px;
 }
+
+.modal-body {
+  background-color: #8a0662;
+  color: white;
+}
+
+.modal-header {
+  background-color: #f7e4f4;
+}
+
+.modal-footer {
+  background-color: #f7e4f4;
+}

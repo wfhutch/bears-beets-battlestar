@@ -1,6 +1,45 @@
 
-<div class='game'></div>
-<div class='stats'>
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Stats</h4>
+      </div>
+      <div id="player-stats" class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-6">
+              <p>Stats for {{ Name }}</p>
+              <p>Games Played: {{ played }}</p>
+              <p>Games Won: {{ won }}</p>
+              <p>Games Lost: {{ lost }}</p>
+              <p>High Score: {{ high }}</p>
+            </div>
+            <div id="leaders">
+              <p>Stats for {{ Name }}</p>
+              <p>Games Played: {{ played }}</p>
+              <p>Games Won: {{ won }}</p>
+              <p>Games Lost: {{ lost }}</p>
+              <p>High Score: {{ high }}</p>
+            </div>
+        </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="modal-button" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+<div class='game'></div> <!-- this is the div where the games displays -->
+
+<div class='stats'>  <!-- this div holds all the text that appears beside the game -->
   <h3>
     <p class='title'>Bears. Beets.</p>
     <P id='game-name' class='title'>Battlestar Galactica!</p>
@@ -29,6 +68,9 @@
     <p>Avoid the bears!</p>
   </div>
   <div>
-    <input type='submit' class='btn btn-success btn-lg' id='logout-btn' ng-click='logout()' value="Logout">
-  </div>
+    <input type='submit' class='btn btn-success btn-md' id='logout-btn' ng-click='logout()' value="Logout">
+  </div>  
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Stats
+</button>
 </div>

@@ -1,7 +1,26 @@
 
-app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
+app.controller("gameCtrl", ["$scope", "stats", "uidHandle", "$firebaseObject", "$firebaseArray",
+    function($scope, stats, uidHandle, $firebaseObject, $firebaseArray) {
+
+    var uid = uidHandle.getUid();
 
     var ref = new Firebase("https://bears-beets.firebaseio.com/players");
+    $scope.leaderBoard = $firebaseArray(ref);
+    $scope.leaderBoard.$loaded(function() {
+        console.log("array", $scope.leaderBoard);
+    });
+
+    var playerRef = new Firebase("https://bears-beets.firebaseio.com/players/" + uid);
+    var $player = $firebaseObject(playerRef);
+        $player.$loaded(function() {
+            console.log("player", $player);
+            $scope.played = $player.gamesPlayed;
+            $scope.high = $player.highScore;
+            $scope.won = $player.gamesWon;
+            $scope.lost = $player.gamesLost;
+            $scope.Name = $player.username;
+          });
+        console.log("name", $scope.Name);
 
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
 
@@ -576,7 +595,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
             var newLost = lost + 1;
             stats.setgamesLost(newLost);
             $('#lost').html('Lost:' + " " + newLost);
-            endText.setText("Bummer!\nYou Got 'Beet' Down!");
+            endText.setText("Bummer!\nGuess You Couldn't 'Bear' It!");
         }
     }
 
@@ -622,6 +641,9 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
       window.location = '/';
     };
 
+    $scope.stats = function() {
+        window.location = '#/stats';
+    };
 
     function render() {
         // game.debug.body(fixedCab);

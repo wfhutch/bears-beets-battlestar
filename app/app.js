@@ -34,19 +34,19 @@ app.factory('stats',
 
   var profileRef = new Firebase("https://bears-beets.firebaseio.com/players/" + uid);
 
-  var gamesPlayed;
-  var highScore;
-  var gamesWon;
-  var gamesLost;
+  var gamesPlayed = 0;
+  var highScore = 0;
+  var gamesWon = 0;
+  var gamesLost = 0;
   var userName;
 
   var $profile = $firebaseObject(profileRef);
   $profile.$loaded(function() {
 
-    gamesPlayed = $profile.gamesPlayed;
-    highScore = $profile.highScore;
-    gamesWon = $profile.gamesWon;
-    gamesLost = $profile.gamesLost;
+    // gamesPlayed = $profile.gamesPlayed;
+    // highScore = $profile.highScore;
+    // gamesWon = $profile.gamesWon;
+    // gamesLost = $profile.gamesLost;
     userName = $profile.username;
 
   });
@@ -105,6 +105,9 @@ app.config(['$routeProvider',
       }).when('/game', {
         templateUrl: 'partials/game.html',
         controller: 'gameCtrl'
+      }).when('/stats', {
+        templateUrl: 'partials/stats.html',
+        controller: 'savedStatsCtrl'
       }).otherwise({
         redirectTo: '/'
       });
