@@ -453,6 +453,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         if (playerHealth < 0) {
             playerHealth = 0;
         }
+
         playerText.text = 'Health: ' + playerHealth + '%';
 
         var explosion = this.add.sprite(player.x, player.y, 'explosion1');
@@ -460,7 +461,7 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
         explosion.animations.add('boom');
         explosion.play('boom', 15, false, true);
 
-        if (playerHealth <= 0) {
+        if (playerHealth === 0) {
             endGame();
             gameStats();
             lost = stats.getgamesLost();
@@ -554,14 +555,29 @@ app.controller("gameCtrl", ["$scope", "stats", function($scope, stats) {
     //  Lose points for running into the bear
     function hitBear () {
         score -= 1;
+        if (score < 0) {
+            score = 0;
+        }
         scoreText.text = 'Score: ' + score;
     }
 
     function hitBigBear () {
         score -= 10;
+        if (score < 0) {
+            score = 0;
+        }
         scoreText.text = 'Score: ' + score;
         playerHealth -= 1;
         playerText.text = 'Health: ' + playerHealth + '%';
+        if (playerHealth === 0) {
+            endGame();
+            gameStats();
+            lost = stats.getgamesLost();
+            var newLost = lost + 1;
+            stats.setgamesLost(newLost);
+            $('#lost').html('Lost:' + " " + newLost);
+            endText.setText("Bummer!\nYou Got 'Beet' Down!");
+        }
     }
 
     function endGame () {

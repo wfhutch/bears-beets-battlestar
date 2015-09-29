@@ -17,7 +17,12 @@ body {
 }
 
 #greeting {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  font-family: "Gloria Hallelujah";
+}
+
+.instructions {
+  line-height: 1;
 }
 
 h4 p {
@@ -29,8 +34,7 @@ div p {
 }
 
 .title {
-  font-family: 'Gloria Hallelujah';
-  font-size: 1.5em;
+  font-family: 'remagg_cz', monospace;
 }
 
 #game-name {
@@ -38,7 +42,7 @@ div p {
 }
 
 #statcat {
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
 
 .login {
@@ -55,7 +59,7 @@ div p {
 }
 
 #login-title {
-  font-family: 'Gloria Hallelujah';
+  font-family: 'remagg_cz', monospace;
   font-size: 4em;
 }
 
