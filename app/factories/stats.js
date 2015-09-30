@@ -31,9 +31,6 @@ app.factory('sessionStats', ['uidHandle', function(uidHandle) {
     },
     setgamesLost: function(lost) {
       gamesLost = lost;
-    },
-    getusername: function() {
-      return username;
     }
   };
 }]);

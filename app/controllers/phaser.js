@@ -4,7 +4,18 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
 
     var uid = uidHandle.getUid();
 
+
     var playerRef = new Firebase("https://bears-beets.firebaseio.com/players/" + uid);
+    console.log('playerRef', playerRef);
+
+    var $thisPlayer = $firebaseObject(playerRef);
+
+    $thisPlayer.$loaded(function() {
+        if ($thisPlayer.username === undefined) {
+        window.location = '/';
+        }
+        console.log("user", $thisPlayer.username);
+    });
 
     // Put the top 5 high scores in Leaderboard in stats modal 
     var ref = new Firebase("https://bears-beets.firebaseio.com/players");
@@ -352,7 +363,7 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
         var startingWon = sessionStats.getgamesWon();
         var startingLost = sessionStats.getgamesLost();
         var startingHigh = sessionStats.gethighScore();
-        var user = sessionStats.getuserName();
+        var user = $thisPlayer.username;
 
         $('#lost').html('Lost:' + " " + startingLost);
         $('#won').html('Won:' + " " + startingWon);
@@ -494,13 +505,14 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
             sessionLost = sessionStats.getgamesLost();
             var newSessionLost = sessionLost + 1;
             sessionStats.setgamesLost(newSessionLost);
-            $('#lost').html('Lost:' + " " + newSessionLost);
-            endText.setText("Bummer!\nYou Got 'Beet' Down!");
 
             // Post stats to Firebase
             lost = stats.getgamesLost();
             var newLost = lost + 1;
             stats.setgamesLost(newLost);
+
+            $('#lost').html('Lost:' + " " + newSessionLost);
+            endText.setText("Bummer!\nYou Got 'Beet' Down!");          
         }
     }
 
@@ -522,13 +534,14 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
             sessionWon = sessionStats.getgamesWon();
             var newSessionWon = sessionWon + 1;
             sessionStats.setgamesWon(newSessionWon);
-            $('#won').html('Won:' + " " + newSessionWon);
-            endText.setText("Congratulations!\nYou Saved Schrute's Beet Farm!");
 
             // Set Firebase stats
             won = stats.getgamesWon();
             var newWon = won + 1;
             stats.setgamesWon(newWon);
+
+            $('#won').html('Won:' + " " + newSessionWon);
+            endText.setText("Congratulations!\nYou Saved Schrute's Beet Farm!");
         }
 
         // explosion animation
@@ -618,13 +631,14 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
             sessionLost = sessionStats.getgamesLost();
             var newSessionLost = sessionLost + 1;
             sessionStats.setgamesLost(newSessionLost);
-            $('#lost').html('Lost:' + " " + newLost);
-            endText.setText("Bummer!\nGuess You Couldn't 'Bear' It!");
 
             // Set Firebase stats
             lost = stats.getgamesLost();
             var newLost = lost + 1;
             stats.setgamesLost(newLost);
+
+            $('#lost').html('Lost:' + " " + newSessionLost);
+            endText.setText("Bummer!\nGuess You Couldn't 'Bear' It!");
         }
     }
 
@@ -677,7 +691,7 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
         stats.setgamesPlayed(newPlayed);
 
         var newHighScore = sessionStats.gethighScore();
-        $('#played').html('Played:' + " " + newPlayed);
+        $('#played').html('Played:' + " " + newSessionPlayed);
         $('#high').html('High Score:' + " " + newHighScore);
     }
 
