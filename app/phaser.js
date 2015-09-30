@@ -4,11 +4,12 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
 
     var uid = uidHandle.getUid();
 
+    var playerRef = new Firebase("https://bears-beets.firebaseio.com/players/" + uid);
+
     // Put the top 5 high scores in Leaderboard in stats modal 
     var ref = new Firebase("https://bears-beets.firebaseio.com/players");
     $scope.leaderBoard = $firebaseArray(ref);
     $scope.leaderBoard.$loaded(function() {
-        console.log("array", $scope.leaderBoard);
     });
 
 
@@ -117,7 +118,7 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
         hit = game.add.audio('enemyHit');
         die = game.add.audio('enemyDie');
         enemyFireSound = game.add.audio('enemyFire');
-        music = game.add.audio('office');
+        // music = game.add.audio('office');
 
         sky = game.add.tileSprite(0, 0, 2400, 600, 'sky');
 
@@ -350,7 +351,7 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
         var startingWon = sessionStats.getgamesWon();
         var startingLost = sessionStats.getgamesLost();
         var startingHigh = sessionStats.gethighScore();
-        var user = stats.getuserName();
+        var user = sessionStats.getusername();
 
         $('#lost').html('Lost:' + " " + startingLost);
         $('#won').html('Won:' + " " + startingWon);
@@ -358,20 +359,22 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
         $('#high').html('High Score:' + " " + startingHigh);
         $('#greeting').html('Hey' + " " + user + ", lets play!");
 
+
+    }
+
+    function update() {
+
         // Set player stats in modal to current Firebase stats
-        var playerRef = new Firebase("https://bears-beets.firebaseio.com/players/" + uid);
+        
         var $player = $firebaseObject(playerRef);
             $player.$loaded(function() {
-                console.log("player", $player);
                 $scope.played = $player.gamesPlayed;
                 $scope.high = $player.highScore;
                 $scope.won = $player.gamesWon;
                 $scope.lost = $player.gamesLost;
                 $scope.Name = $player.username;
               });
-    }
 
-    function update() {
 
         textButton.visible = false;
 
@@ -379,7 +382,7 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
             textButton.visible = true;
         }
 
-        music.play('', 0, 2, false, false);
+        // music.play('', 0, 2, false, false);
 
         // Move enemy back and forth
         if (enemy.body.position.x < 1700) {
