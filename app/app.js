@@ -10,7 +10,7 @@ var app = angular.module("myGame", ["ngRoute", "firebase"])
     }
   };
 });
-// .run(['$rootScope', function($rootScope, $state) {
+// .run(function() {
 
 //   $rootScope.$on("$locationChangeStart", function(event, next, current) { 
 
@@ -19,12 +19,14 @@ var app = angular.module("myGame", ["ngRoute", "firebase"])
 //     $state.go('/');
 //   });
 
-   // var baseRef = new Firebase("https://bears-beets.firebaseio.com/players");
+//    var baseRef = new Firebase("https://bears-beets.firebaseio.com/players");
 
-   // var authData = baseRef.getAuth();
-   // uidHandle.setUid(authData.uid);
-   // console.log("authData", authData);
-// }]);
+//    var authData = baseRef.getAuth();
+//    if (authData !== null) {
+//      window.location = '#game';
+//    }
+
+// });
 
 app.factory('stats', 
   ['uidHandle', '$firebaseObject', 
@@ -43,10 +45,10 @@ app.factory('stats',
   var $profile = $firebaseObject(profileRef);
   $profile.$loaded(function() {
 
-    // gamesPlayed = $profile.gamesPlayed;
-    // highScore = $profile.highScore;
-    // gamesWon = $profile.gamesWon;
-    // gamesLost = $profile.gamesLost;
+    gamesPlayed = $profile.gamesPlayed;
+    highScore = $profile.highScore;
+    gamesWon = $profile.gamesWon;
+    gamesLost = $profile.gamesLost;
     userName = $profile.username;
 
   });
@@ -92,10 +94,7 @@ app.factory('stats',
         return userName;
       }
     };
-
-  
 }]);
-
 
 app.config(['$routeProvider',
   function($routeProvider) {
@@ -111,5 +110,5 @@ app.config(['$routeProvider',
       }).otherwise({
         redirectTo: '/'
       });
-  }]);
+}]);
 

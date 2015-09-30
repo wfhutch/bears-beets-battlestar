@@ -8,6 +8,7 @@ body {
   clear: right;
 }
 
+/***** Stats displayed on right hand side of game page *****/
 .stats {
   float: right;
   clear: left;
@@ -70,6 +71,26 @@ div p {
   background-color: #f7e4f4;
   border-radius: 5px;
 }
+
+.required {
+  font-size: 2em;
+  color: orange;
+}
+
+#modal-btn {
+  font-weight: 800;
+  color: black;
+  margin-top: 30px;
+  background-color: #f7e4f4;
+  border-radius: 5px;
+  padding-right: 19px;
+  padding-left: 18px;
+}
+
+.leader-list {
+  font-size: 1.3em;
+  margin: .2em;
+} 
 
 .pic {
   margin-top: 50px;

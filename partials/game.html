@@ -17,11 +17,12 @@
               <p>High Score: {{ high }}</p>
             </div>
             <div id="leaders">
-              <p>Stats for {{ Name }}</p>
-              <p>Games Played: {{ played }}</p>
-              <p>Games Won: {{ won }}</p>
-              <p>Games Lost: {{ lost }}</p>
-              <p>High Score: {{ high }}</p>
+              <p>Leaderboard</p>
+              <ol>
+                <li class="leader-list" ng-repeat="stat in leaderBoard | orderBy: '-highScore' | limitTo:5">  <!-- Filter top 5 scores in descending order -->
+                  {{ stat.username + ': ' + stat.highScore }}
+                </li>
+              </ol>
             </div>
         </div>
         </div>
@@ -37,7 +38,7 @@
 
 
 
-<div class='game'></div> <!-- this is the div where the games displays -->
+<div class='game'></div> <!-- this is the div where the game displays -->
 
 <div class='stats'>  <!-- this div holds all the text that appears beside the game -->
   <h3>
@@ -70,7 +71,7 @@
   <div>
     <input type='submit' class='btn btn-success btn-md' id='logout-btn' ng-click='logout()' value="Logout">
   </div>  
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Stats
-</button>
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-success btn-md" id='modal-btn' data-toggle="modal" data-target="#myModal">Stats
+  </button>
 </div>

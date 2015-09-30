@@ -31,12 +31,12 @@
   </form>
   <!-- New user email and password validation -->
   <div class="row">
-    <span style="color:white" ng-show="myForm.email.$dirty && myForm.email.$invalid">
-      <span ng-show="myForm.email.$error.required">Email is required.</span>
-      <span ng-show="myForm.email.$error.email">Invalid email address.</span>
+    <span ng-show="myForm.email.$dirty && myForm.email.$invalid">
+      <span class="required" ng-show="myForm.email.$error.required">Email is required.</span>
+      <span class="required" ng-show="myForm.email.$error.email">Invalid email address.</span>
     </span>
-      <span style="color:white" ng-show="myForm.password.$dirty && myForm.password.$invalid">
-      <span ng-show="myForm.password.$error.required">Password is required.</span>
+      <span ng-show="myForm.password.$dirty && myForm.password.$invalid">
+      <span class="required" ng-show="myForm.password.$error.required">Password is required.</span>
     </span>
   </div>
 
@@ -59,12 +59,12 @@
   </form>
   <!-- Login email and password validation -->
   <div class="row">
-    <span style="color:white" ng-show="loginForm.loginEmail.$dirty && loginForm.loginEmail.$invalid">
-      <span ng-show="loginForm.loginEmail.$error.required">Email is required.</span>
-      <span ng-show="loginForm.loginEmail.$error.loginEmail">Invalid email address.</span>
+    <span ng-show="loginForm.loginEmail.$dirty && loginForm.loginEmail.$invalid">
+      <span class="required" ng-show="loginForm.loginEmail.$error.required">Email is required.</span>
+      <span class="required" ng-show="loginForm.loginEmail.$error.loginEmail">Invalid email address.</span>
     </span>
-      <span style="color:white" ng-show="loginForm.loginPassword.$dirty && loginForm.loginPassword.$invalid">
-      <span ng-show="loginForm.loginPassword.$error.required">Password is required.</span>
+      <span ng-show="loginForm.loginPassword.$dirty && loginForm.loginPassword.$invalid">
+      <span class="required" ng-show="loginForm.loginPassword.$error.required">Password is required.</span>
     </span>
   </div>
 
