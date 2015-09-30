@@ -4,11 +4,13 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
 
     var uid = uidHandle.getUid();
 
+    var playerRef = new Firebase("https://bears-beets.firebaseio.com/players/" + uid);
+
     // Put the top 5 high scores in Leaderboard in stats modal 
     var ref = new Firebase("https://bears-beets.firebaseio.com/players");
     $scope.leaderBoard = $firebaseArray(ref);
     $scope.leaderBoard.$loaded(function() {
-        console.log("array", $scope.leaderBoard);
+
     });
 
 
@@ -350,7 +352,7 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
         var startingWon = sessionStats.getgamesWon();
         var startingLost = sessionStats.getgamesLost();
         var startingHigh = sessionStats.gethighScore();
-        var user = stats.getuserName();
+        var user = sessionStats.getuserName();
 
         $('#lost').html('Lost:' + " " + startingLost);
         $('#won').html('Won:' + " " + startingWon);
@@ -359,10 +361,8 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
         $('#greeting').html('Hey' + " " + user + ", lets play!");
 
         // Set player stats in modal to current Firebase stats
-        var playerRef = new Firebase("https://bears-beets.firebaseio.com/players/" + uid);
         var $player = $firebaseObject(playerRef);
             $player.$loaded(function() {
-                console.log("player", $player);
                 $scope.played = $player.gamesPlayed;
                 $scope.high = $player.highScore;
                 $scope.won = $player.gamesWon;
