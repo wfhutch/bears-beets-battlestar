@@ -4,9 +4,7 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
 
     var uid = uidHandle.getUid();
 
-
     var playerRef = new Firebase("https://bears-beets.firebaseio.com/players/" + uid);
-    console.log('playerRef', playerRef);
 
     var $thisPlayer = $firebaseObject(playerRef);
 
@@ -14,18 +12,14 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
         if ($thisPlayer.username === undefined) {
         window.location = '/';
         }
-        console.log("user", $thisPlayer.username);
     });
 
     // Put the top 5 high scores in Leaderboard in stats modal 
     var ref = new Firebase("https://bears-beets.firebaseio.com/players");
     $scope.leaderBoard = $firebaseArray(ref);
-    $scope.leaderBoard.$loaded(function() {
+    // $scope.leaderBoard.$loaded(function() {
 
-    });
-
-
-
+    // });
 
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
 
@@ -369,7 +363,7 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
         $('#won').html('Won:' + " " + startingWon);
         $('#played').html('Played:' + " " + startingPlayed);
         $('#high').html('High Score:' + " " + startingHigh);
-        $('#greeting').html('Hey' + " " + user + ", lets play!");
+        $('#greeting').html('Hey' + " " + user + "!");
 
         // Set player stats in modal to current Firebase stats
         var $player = $firebaseObject(playerRef);
@@ -390,7 +384,10 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
             textButton.visible = true;
         }
 
-        music.play('', 0, 2, false, false);
+        if (started && player.alive) {
+            music.play('', 0, 2, false, false);
+        }
+
 
         // Move enemy back and forth
         if (enemy.body.position.x < 1700) {
@@ -499,6 +496,7 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
         if (playerHealth === 0) {
             endGame();
             gameStats();
+            player.alive = false;
 
             // Because session stats and cumulative Firebase stats are kept seperately
             // have to update both Firebase stats and session stats after each game
@@ -528,6 +526,7 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
             die.play('', 0, 1, false, false);
             endGame();
             gameStats();
+            player.alive = false;
 
             // Because session stats and cumulative Firebase stats are kept seperately
             // have to update both Firebase stats and session stats after each game
