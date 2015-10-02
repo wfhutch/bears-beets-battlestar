@@ -33,7 +33,7 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
 
         //  The Google Fonts we want to load (specify as many as you like in the array)
         google: {
-          families: ['Revalia', 'Orbitron', 'Bangers']
+          families: ['Revalia']
         }
 
     };

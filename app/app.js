@@ -10,23 +10,6 @@ var app = angular.module("myGame", ["ngRoute", "firebase"])
     }
   };
 });
-// .run(function() {
-
-//   $rootScope.$on("$locationChangeStart", function(event, next, current) { 
-
-//   if(next==current && next=='#/game')
-//     event.preventDefault();
-//     $state.go('/');
-//   });
-
-//    var baseRef = new Firebase("https://bears-beets.firebaseio.com/players");
-
-//    var authData = baseRef.getAuth();
-//    if (authData !== null) {
-//      window.location = '#game';
-//    }
-
-// });
 
 app.factory('stats', 
   ['uidHandle', '$firebaseObject', 

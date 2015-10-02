@@ -24,10 +24,12 @@
     </div>
     <!-- New user username -->
     <div class="form-group">
-      <input type="text" class="form-control" ng-model="user.username" required placeholder="username">
+      <input type="text" name="username" class="form-control" ng-model="username" required placeholder="username">
     </div>
     <!-- New user submit button -->
-    <input type="submit" ng-disabled="myForm.password.$pristine || myForm.email.$dirty && myForm.email.$invalid" class="btn btn-success" ng-click="createUser()">
+    <input type="submit" ng-disabled="myForm.password.$pristine && myForm.username.$pristine || myForm.password.$dirty && myForm.username.$pristine || myForm.email.$dirty && myForm.email.$invalid" 
+    class="btn btn-success" ng-click="createUser()">    
+
   </form>
   <!-- New user email and password validation -->
   <div class="row">
@@ -35,7 +37,7 @@
       <span class="required" ng-show="myForm.email.$error.required">Email is required.</span>
       <span class="required" ng-show="myForm.email.$error.email">Invalid email address.</span>
     </span>
-      <span ng-show="myForm.password.$dirty && myForm.password.$invalid">
+    <span ng-show="myForm.password.$dirty && myForm.password.$invalid">
       <span class="required" ng-show="myForm.password.$error.required">Password is required.</span>
     </span>
   </div>
