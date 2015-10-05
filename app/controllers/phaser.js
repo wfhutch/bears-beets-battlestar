@@ -100,7 +100,7 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
         game.load.audio('enemyHit', 'audio/explode1.wav');
         game.load.audio('enemyDie', 'audio/explosion.mp3');
         game.load.audio('enemyFire', 'audio/shot1.wav');
-        game.load.audio('office', 'audio/office.wav');
+        game.load.audio('office', 'audio/office_theme.wav');
         game.load.spritesheet('dude', 'assets/new-dude.png', 32, 48);
         game.load.spritesheet('bear', 'assets/bear.png', 32, 32);
         game.load.spritesheet('explosion1', 'assets/boom32wh12.png', 32, 32);
@@ -385,7 +385,7 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
         }
 
         if (started && player.alive) {
-            music.play('', 0, 2, false, false);
+            music.play('', 0, 4, false, false);
         }
 
 
@@ -577,7 +577,6 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
         //  Grab the first bullet we can from the pool
         enemyBullet = enemyBullets.getFirstExists(false);
 
-        var shooter = enemy;
         // And fire the bullet from this enemy
         enemyBullet.reset(enemy.body.x, enemy.body.y);
         enemyFireSound.play('', 0, 0.2, false, false);

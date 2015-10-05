@@ -2,7 +2,7 @@
 app.controller("authCtrl", ["$scope", "$firebaseAuth", "$firebaseArray", "uidHandle", 
   function($scope, $firebaseAuth, $firebaseArray, uidHandle) {
 
-    $scope.letterLimit = 20;
+    $scope.letterLimit = 30;
     $scope.userName = "";
 
 
@@ -31,11 +31,11 @@ app.controller("authCtrl", ["$scope", "$firebaseAuth", "$firebaseArray", "uidHan
             switch (error.code) {
               case "EMAIL_TAKEN":
                 console.log("The new user account cannot be created because the email is already in use.");
-                alert("Email address already in use.  Please enter new email");
+                $("#message").html("Email address already in use.  Please enter new email.");
                 break;
               case "INVALID_EMAIL":
                 console.log("The specified email is not a valid email.");
-                alert("Invalid email address. Please try again"); 
+                $("#message").html("Invalid email address. Please try again.");
                 break;
               default:
                 console.log("Error creating user:", error);
@@ -43,13 +43,13 @@ app.controller("authCtrl", ["$scope", "$firebaseAuth", "$firebaseArray", "uidHan
           } 
           else {
             console.log("Successfully created user account with uid:", userData.uid);
-            alert("User successfully created. Please log in to continue.");
+            $("#message").html("User successfully created. Please log in to continue.").css("color", "#00bb00");
           }
 
           $scope.usernameLength = $scope.username.length;
           console.log("username length", $scope.usernameLength);
           if ($scope.usernameLength > $scope.letterLimit) {
-            $scope.userName = $scope.username.slice(0, 20);
+            $scope.userName = $scope.username.slice(0, $scope.letterLimit);
           } else {
             $scope.userName = $scope.username;
             }
@@ -67,7 +67,7 @@ app.controller("authCtrl", ["$scope", "$firebaseAuth", "$firebaseArray", "uidHan
         });
       }
       else {
-        alert("Username already used. Please try a different name.");
+        $("#message").html("Username already used. Please use a different name.");
       }
     };
 
@@ -79,7 +79,7 @@ app.controller("authCtrl", ["$scope", "$firebaseAuth", "$firebaseArray", "uidHan
       }, function(error, authData) {
         if (error) {
           console.log("Login Failed!", error);
-          alert("Login failed. Please try again.");
+          $("#message").html("Login failed. Please try again.");
         } else {
           console.log("Authenticated successfully with payload:", authData);
           uidHandle.setUid(authData.uid);
