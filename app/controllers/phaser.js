@@ -597,8 +597,9 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
         //  Add and update the score
         score += 100;
         scoreText.text = 'Score: ' + score;
-        if (playerHealth <= 95) {
         playerHealth += 5;
+        if (playerHealth > 100) {
+            playerHealth = 100; 
         }
         playerText.text = 'Health: ' + playerHealth + '%';
     }
@@ -653,14 +654,18 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
     }
 
     function bonusPoints () {
-        if (playerHealth >= 50) {
+        if (playerHealth >= 50 && playerHealth <= 99) {
             score += 2000;
-        }  else {
+        }   
+        else if 
+            (playerHealth === 100) {
+                score += 3000;
+            }
+        else {
             score = score;
-        }
-            scoreText.text = 'Score: ' + score;
-            return score;
-        
+            }
+        scoreText.text = 'Score: ' + score;
+        return score;
     }
 
     function gameStats () {
