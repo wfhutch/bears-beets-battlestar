@@ -17,9 +17,6 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
     // Put the top 5 high scores in Leaderboard in stats modal 
     var ref = new Firebase("https://bears-beets.firebaseio.com/players");
     $scope.leaderBoard = $firebaseArray(ref);
-    // $scope.leaderBoard.$loaded(function() {
-
-    // });
 
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
 
@@ -262,7 +259,7 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
         bear3.enableBody = true;
         game.physics.arcade.enable(bear3);
         bear3.body.immovable = true;
-        bear3.body.setSize(20, 10, 10, 10);
+        bear3.body.setSize(22, 10, 10, 10);
         bear3.scale.setTo(-6, 6);        
 
         bear4 = game.add.sprite(1700, 510, 'bear');
@@ -704,7 +701,7 @@ app.controller("gameCtrl", ["$scope", "stats", "sessionStats", "uidHandle", "$fi
     };
 
     function render() {
-        // game.debug.body(fixedCab);
+        // game.debug.body(bear3);
         // cabinet.forEach(function(cab) {
         //     game.debug.body(cab);
         // })
