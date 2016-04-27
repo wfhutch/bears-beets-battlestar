@@ -30,7 +30,7 @@
       <input type="text" name="username" class="form-control" ng-model="username" required placeholder="username">
     </div>
     <!-- New user submit button -->
-    <input type="submit" ng-disabled="myForm.password.$pristine && myForm.username.$pristine || myForm.password.$dirty && myForm.username.$pristine || myForm.email.$dirty && myForm.email.$invalid" 
+    <input type="submit" ng-disabled="myForm.email.$pristine || myForm.password.$pristine || myForm.username.$pristine || myForm.password.$dirty && myForm.username.$pristine || myForm.email.$dirty && myForm.email.$invalid" 
     class="btn btn-success" ng-click="createUser()">    
 
   </form>
@@ -60,7 +60,7 @@
       <input type="password" name="password" class="form-control" ng-model="loginPassword" required placeholder="password">
     </div>
     <!-- Login submit button -->
-    <input type="submit" ng-disabled="loginForm.password.$pristine || loginForm.loginEmail.$dirty && loginForm.loginEmail.$invalid" class="btn btn-success" ng-click="loginUser()">
+    <input type="submit" value="Login" ng-disabled="loginForm.password.$pristine || loginForm.loginEmail.$dirty && loginForm.loginEmail.$invalid" class="btn btn-success" ng-click="loginUser()">
   </form>
   <!-- Login email and password validation -->
   <div class="row">
